@@ -1,37 +1,45 @@
 
+export interface UserProfile {
+  firstName: string;
+  lastName: string;
+  dob: string;
+  gmail: string;
+  phone: string;
+  password?: string;
+}
+
 export const authService = {
-  getUsers: () => JSON.parse(localStorage.getItem('cignifi_users') || '[]'),
+  getUsers: (): UserProfile[] => JSON.parse(localStorage.getItem('cignifi_users') || '[]'),
   
-  saveUser: (user: any) => {
+  saveUser: (user: UserProfile) => {
     const users = authService.getUsers();
     users.push(user);
     localStorage.setItem('cignifi_users', JSON.stringify(users));
   },
 
-  signUp: async (email: string, password: string) => {
-    // Artificial delay for realism
-    await new Promise(r => setTimeout(r, 800));
+  signUp: async (profile: UserProfile) => {
+    await new Promise(r => setTimeout(r, 1200));
     const users = authService.getUsers();
-    if (users.find((u: any) => u.email === email)) {
-      throw new Error("User already exists");
+    if (users.find((u) => u.gmail === profile.gmail)) {
+      throw new Error("A user with this Gmail already exists");
     }
-    authService.saveUser({ email, password });
-    return { email };
+    authService.saveUser(profile);
+    return { gmail: profile.gmail };
   },
 
-  signIn: async (email: string, password: string) => {
-    await new Promise(r => setTimeout(r, 800));
+  signIn: async (gmail: string, password: string) => {
+    await new Promise(r => setTimeout(r, 1000));
     const users = authService.getUsers();
-    const user = users.find((u: any) => u.email === email && u.password === password);
-    if (!user) throw new Error("Invalid email or password");
+    const user = users.find((u) => u.gmail === gmail && u.password === password);
+    if (!user) throw new Error("Invalid credentials. Please check your Gmail or password.");
     return user;
   },
 
-  sendResetEmail: async (email: string) => {
+  sendResetEmail: async (gmail: string) => {
     await new Promise(r => setTimeout(r, 1000));
     const users = authService.getUsers();
-    if (!users.find((u: any) => u.email === email)) {
-      throw new Error("Email not found");
+    if (!users.find((u) => u.gmail === gmail)) {
+      throw new Error("Gmail address not found in our records.");
     }
     return true;
   }

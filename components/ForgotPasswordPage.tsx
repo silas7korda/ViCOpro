@@ -8,7 +8,7 @@ interface ForgotPasswordPageProps {
 }
 
 export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ onBack }) => {
-  const [email, setEmail] = useState('');
+  const [gmail, setGmail] = useState('');
   const [isSent, setIsSent] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,7 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ onBack }
     e.preventDefault();
     setLoading(true);
     try {
-      await authService.sendResetEmail(email);
+      await authService.sendResetEmail(gmail);
       setIsSent(true);
     } catch (error: any) {
       alert(error.message);
@@ -26,10 +26,10 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ onBack }
   };
 
   return (
-    <div className="auth-card w-full p-10 flex flex-col items-center relative animate-in backdrop-blur-md bg-white/80 border border-white/20">
+    <div className="auth-card w-full p-10 flex flex-col items-center relative animate-in">
       <button 
         onClick={onBack} 
-        className="absolute left-8 top-10 text-gray-400 hover:text-indigo-600"
+        className="absolute left-8 top-10 text-gray-400 hover:text-white transition-colors"
       >
         <i className="fa-solid fa-arrow-left text-lg"></i>
       </button>
@@ -37,41 +37,44 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ onBack }
       <Logo />
 
       <div className="w-full text-left mb-6">
-        <h2 className="text-lg font-semibold text-gray-800">Recover Password</h2>
-        <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+        <h2 className="text-xl font-bold text-white">Reset Password</h2>
+        <p className="text-xs text-gray-400 mt-2 leading-relaxed">
           {isSent 
-            ? "Recovery instructions have been sent." 
-            : "Enter your email address to receive a reset link."}
+            ? "We've sent recovery instructions to your Gmail." 
+            : "Enter your registered Gmail address to receive a verification link."}
         </p>
       </div>
 
       {!isSent ? (
         <form onSubmit={handleSubmit} className="w-full space-y-6">
-          <input
-            type="email"
-            required
-            className="cignifi-input w-full py-4 px-5 rounded-xl text-sm text-gray-700"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div className="relative">
+            <i className="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input
+              type="email"
+              required
+              className="cignifi-input w-full py-4 pl-12 pr-5 rounded-xl text-sm"
+              placeholder="Gmail Address"
+              value={gmail}
+              onChange={(e) => setGmail(e.target.value)}
+            />
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`btn-primary w-full text-white font-semibold py-4 rounded-xl ${loading ? 'opacity-70 cursor-wait' : ''}`}
+            className={`btn-primary w-full text-white font-bold py-4 rounded-xl ${loading ? 'opacity-70 cursor-wait' : ''}`}
           >
-            {loading ? 'Sending link...' : 'Send Recovery Link'}
+            {loading ? 'Transmitting link...' : 'Send Recovery Link'}
           </button>
         </form>
       ) : (
         <div className="w-full space-y-6 text-center">
-          <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto border border-green-100">
-            <i className="fa-solid fa-check text-green-500 text-2xl"></i>
+          <div className="w-20 h-20 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto border border-indigo-500/50">
+            <i className="fa-solid fa-paper-plane text-indigo-400 text-3xl animate-bounce"></i>
           </div>
           <button
             onClick={onBack}
-            className="btn-primary w-full text-white font-semibold py-4 rounded-xl"
+            className="btn-primary w-full text-white font-bold py-4 rounded-xl"
           >
             Back to Login
           </button>
@@ -81,9 +84,9 @@ export const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ onBack }
       {!isSent && (
         <button 
           onClick={onBack} 
-          className="mt-10 text-xs text-gray-400 font-bold uppercase tracking-widest hover:text-indigo-600 transition-colors"
+          className="mt-10 text-xs text-gray-500 font-bold uppercase tracking-widest hover:text-white transition-colors"
         >
-          Cancel
+          Nevermind, I remember
         </button>
       )}
     </div>
